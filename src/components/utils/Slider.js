@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
+import { context } from "../../App";
 
 import './Slider.css';
 
 export function Slider({ setMinMax }) {
 
-
+    const { reset } = useContext(context);
     let sliderOne = useRef(null);
     let sliderTwo = useRef(null);
     let displayValOne = useRef(null);
@@ -29,11 +30,21 @@ export function Slider({ setMinMax }) {
         setMinMax((prev) => [prev[0], parseInt(sliderTwo.current.value)]);
 
     }
+    function resetValues() {
+        sliderOne.current.value = 0;
+        sliderTwo.current.value = 2000;
+        displayValOne.current.textContent = sliderOne.current.value;
+        displayValTwo.current.textContent = sliderTwo.current.value;
+        setMinMax((prev) => [0, 2000]);
+    }
 
     useEffect(() => {
         slideOne();
         slideTwo();
-    }, [])
+        if (reset) {
+            resetValues();
+        }
+    }, [reset])
 
     return (
         <div className="wrapper">

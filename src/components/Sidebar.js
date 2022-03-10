@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import { Slider } from './utils/Slider';
 import { context } from "../App";
@@ -6,7 +6,7 @@ import { context } from "../App";
 
 export function Sidebar({ }) {
     // extracting the data from the context present in the App.js
-    const { sizes, brands, originalProduct, setProducts, setIsLoading } = useContext(context);
+    const { sizes, brands, originalProduct, setProducts, setIsLoading, reset, setReset } = useContext(context);
     const [minMax, setMinMax] = useState([0, 2000]);
     const [states, setStates] = useState({
         sizes: new Array(sizes.length).fill(false),
@@ -52,6 +52,20 @@ export function Sidebar({ }) {
 
     }
 
+    function resetFilters() {
+        setStates({
+            sizes: new Array(sizes.length).fill(false),
+            brands: new Array(brands.length).fill(false),
+        });
+        setMinMax([0, 2000]);
+        setReset(false);
+    }
+    useEffect(() => {
+        if (reset) {
+            resetFilters();
+        }
+    }, [reset]);
+
     return <div className="col-sidebar">
         <div className="filter">
             <div className="filter-header">
@@ -62,12 +76,11 @@ export function Sidebar({ }) {
             {/* filter by brand names , has checkboxes before brand names */}
             <div className="filter-body">
                 {brands.map((brand, index) => <div className="filter-item" key={index}>
-                    <input type="checkbox" id={brand}
-                        onChange={(e) => {
-                            let newBrands = [...states.brands];
-                            newBrands[index] = e.target.checked;
-                            setStates({ ...states, brands: newBrands });
-                        }}
+                    <input type="checkbox" id={brand} checked={states.brands[index]} onChange={(e) => {
+                        let newBrands = [...states.brands];
+                        newBrands[index] = e.target.checked;
+                        setStates({ ...states, brands: newBrands });
+                    }}
                     />
                     <label htmlFor={brand}>
                         {brand}
@@ -86,7 +99,7 @@ export function Sidebar({ }) {
             </div>
             {/* filter by price range, has two point slider and gives min-max values */}
             <div className="filter-body">
-                <Slider setMinMax={setMinMax} />
+                <Slider setMinMax={setMinMax} reset={reset} />
 
             </div>
 
