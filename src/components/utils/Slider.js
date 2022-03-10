@@ -2,9 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 
 import './Slider.css';
 
-export function Slider({ }) {
-    const [min, setMin] = useState(0);
-    const [max, setMax] = useState(900);
+export function Slider({ setMinMax }) {
+
 
     let sliderOne = useRef(null);
     let sliderTwo = useRef(null);
@@ -20,14 +19,14 @@ export function Slider({ }) {
             sliderOne.current.value = parseInt(sliderTwo.current.value) - minGap;
         }
         displayValOne.current.textContent = sliderOne.current.value;
-        setMin(sliderOne.current.value);
+        setMinMax((prevState) => [parseInt(sliderOne.current.value), prevState[1]]);
     }
     function slideTwo() {
         if (parseInt(sliderTwo.current.value) - parseInt(sliderOne.current.value) <= minGap) {
             sliderTwo.current.value = parseInt(sliderOne.current.value) + minGap;
         }
         displayValTwo.current.textContent = sliderTwo.current.value;
-        setMax(sliderTwo.current.value);
+        setMinMax((prev) => [prev[0], parseInt(sliderTwo.current.value)]);
 
     }
 
@@ -44,13 +43,13 @@ export function Slider({ }) {
                 </span>
                 <span> ‐ </span>
                 <span ref={displayValTwo}>
-                    900
+                    2000
                 </span>
             </div>
             <div className="container-slider">
                 <div className="slider-track" ref={sliderTrack} />
                 <input type="range" min={0} max={2000} step={10} defaultValue={0} ref={sliderOne} onInput={slideOne} />
-                <input type="range" min={0} max={2000} step={10} defaultValue={900} ref={sliderTwo} onInput={slideTwo} />
+                <input type="range" min={0} max={2000} step={10} defaultValue={2000} ref={sliderTwo} onInput={slideTwo} />
             </div>
         </div >
     );

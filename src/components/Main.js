@@ -19,7 +19,11 @@ export function Main({ list, loading }) {
                 {loading ?
                     <div className="loader"></div>
                     :
-                    list && list[0] ? list.map((item, index) => <Cards key={item.id} title={item.shoe} price={item.retailPrice} shoe={item.name} image={item.media.smallImageUrl} id />
+                    list && list[0] ? list.map((item, index) => {
+                        if (index < 25) {
+                            return <Cards key={item.id} title={item.shoe} price={item.retailPrice} shoe={item.name} image={item.media.smallImageUrl} id />
+                        }
+                    }
                     )
                         :
 
